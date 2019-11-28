@@ -1,7 +1,10 @@
 package com.jg.jooq.controller;
 
-import com.jg.jooq.data.model.Book;
-import com.jg.jooq.service.AuthorService;
+import com.jg.jooq.data.model.tables.records.BookRecord;
+import com.jg.jooq.dto.ApiBook;
+import com.jg.jooq.dto.ApiCreateBook;
+import com.jg.jooq.dto.ApiUpdateBook;
+import com.jg.jooq.mapper.ModelMapper;
 import com.jg.jooq.service.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -15,28 +18,26 @@ public class BookController {
     @Autowired
     private BookService bookService;
 
-    @Autowired
-    private AuthorService authorService;
+    private ModelMapper mapper = new ModelMapper();
 
     @PostMapping("/authors/{authorId}/books")
-    public Book createBook(@PathVariable UUID authorId, @RequestBody Book newBook){
-        newBook.setAuthor(authorService.getauthorById(authorId));
-        return bookService.createBook(newBook);
+    public ApiBook createBook(@PathVariable UUID authorId, @RequestBody ApiCreateBook book){
+        return mapper.map(bookService.createBook(book.getName(), book.getPrice(), authorId), ApiBook.class);
     }
 
     @GetMapping("/books/{bookId}")
-    public Book getBookById(@PathVariable UUID bookId){
-        return bookService.getBookById(bookId);
+    public ApiBook getBookById(@PathVariable UUID bookId){
+        return mapper.map(bookService.getBookById(bookId), ApiBook.class);
     }
 
     @GetMapping("/books")
-    public List<Book> getBooks(){
-        return bookService.getBooks();
+    public List<ApiBook> getBooks(){
+        return mapper.mapAsList(bookService.getBooks(), ApiBook.class);
     }
 
     @PutMapping("/books/{bookId}")
-    public Book updateBook(@PathVariable UUID bookId, @RequestBody Book newBook){
-        return bookService.updateBook(bookId, newBook);
+    public ApiBook updateBook(@PathVariable UUID bookId, @RequestBody ApiUpdateBook book){
+        return mapper.map(bookService.updateBook(bookId, book.getName(), book.getPrice()), ApiBook.class);
     }
 
     @DeleteMapping("/books/{bookId}")

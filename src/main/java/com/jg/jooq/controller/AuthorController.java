@@ -1,6 +1,10 @@
 package com.jg.jooq.controller;
 
-import com.jg.jooq.data.model.Author;
+import com.jg.jooq.data.model.tables.records.AuthorRecord;
+import com.jg.jooq.dto.ApiAuthor;
+import com.jg.jooq.dto.ApiCreateAuthor;
+import com.jg.jooq.dto.ApiUpdateAuthor;
+import com.jg.jooq.mapper.ModelMapper;
 import com.jg.jooq.service.AuthorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -14,24 +18,26 @@ public class AuthorController {
     @Autowired
     private AuthorService authorService;
 
+    private ModelMapper mapper = new ModelMapper();
+
     @PostMapping("/authors")
-    public Author createAuthor(@RequestBody Author newAuthor){
-        return authorService.createAuthor(newAuthor);
+    public ApiAuthor createAuthor(@RequestBody ApiCreateAuthor author){
+        return mapper.map(authorService.createAuthor(author.getFirstName(), author.getLastName()), ApiAuthor.class);
     }
 
     @GetMapping("/authors/{authorId}")
-    public Author getAuthorById(@PathVariable UUID authorId){
-        return authorService.getauthorById(authorId);
+    public ApiAuthor getAuthorById(@PathVariable UUID authorId){
+        return mapper.map(authorService.getAuthorById(authorId), ApiAuthor.class);
     }
 
     @GetMapping("/authors")
-    public List<Author> getAuthors(){
-        return authorService.getAuthors();
+    public List<ApiAuthor> getAuthors(){
+        return mapper.mapAsList(authorService.getAuthors(), ApiAuthor.class);
     }
 
     @PutMapping("/authors/{authorId}")
-    public Author updateAuthor(@PathVariable UUID authorId, @RequestBody Author newAuthor){
-        return authorService.updateAuthor(authorId, newAuthor);
+    public ApiAuthor updateAuthor(@PathVariable UUID authorId, @RequestBody ApiUpdateAuthor author){
+        return mapper.map(authorService.updateAuthor(authorId, author.getFirstName(), author.getLastName()), ApiAuthor.class);
     }
 
     @DeleteMapping("/authors/{authorId}")
