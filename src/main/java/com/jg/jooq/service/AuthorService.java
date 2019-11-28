@@ -1,6 +1,6 @@
 package com.jg.jooq.service;
 
-import com.jg.jooq.dto.ApiAuthor;
+import com.jg.jooq.dto.AuthorDto;
 import org.jooq.DSLContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,7 +16,7 @@ public class AuthorService {
 
     com.jg.jooq.data.model.tables.Author author = com.jg.jooq.data.model.tables.Author.AUTHOR;
 
-    public ApiAuthor createAuthor(String firstName, String lastName){
+    public AuthorDto createAuthor(String firstName, String lastName) {
         UUID id = UUID.randomUUID();
 
         context.insertInto(author)
@@ -28,15 +28,15 @@ public class AuthorService {
         return getAuthorById(id);
     }
 
-    public ApiAuthor getAuthorById(UUID id){
-        return context.select().from(author).where(author.ID.eq(id)).fetchAny().into(ApiAuthor.class);
+    public AuthorDto getAuthorById(UUID id) {
+        return context.select().from(author).where(author.ID.eq(id)).fetchAny().into(AuthorDto.class);
     }
 
-    public List<ApiAuthor> getAuthors(){
-        return context.select().from(author).fetch().into(ApiAuthor.class);
+    public List<AuthorDto> getAuthors() {
+        return context.select().from(author).fetch().into(AuthorDto.class);
     }
 
-    public ApiAuthor updateAuthor(UUID id, String firstName, String lastName){
+    public AuthorDto updateAuthor(UUID id, String firstName, String lastName) {
         context.update(author)
                 .set(author.FIRST_NAME, firstName)
                 .set(author.LAST_NAME, lastName)
@@ -46,7 +46,7 @@ public class AuthorService {
         return getAuthorById(id);
     }
 
-    public void deleteAuthorById(UUID id){
+    public void deleteAuthorById(UUID id) {
         context.delete(author).where(author.ID.eq(id)).execute();
     }
 }

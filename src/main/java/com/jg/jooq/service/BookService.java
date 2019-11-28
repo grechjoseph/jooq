@@ -2,7 +2,7 @@ package com.jg.jooq.service;
 
 import com.jg.jooq.data.model.tables.Author;
 import com.jg.jooq.data.model.tables.Book;
-import com.jg.jooq.dto.ApiBook;
+import com.jg.jooq.dto.BookDto;
 import org.jooq.DSLContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,7 +20,7 @@ public class BookService {
     Book book = Book.BOOK;
     Author author = Author.AUTHOR;
 
-    public ApiBook createBook(String name, BigDecimal price, UUID authorId){
+    public BookDto createBook(String name, BigDecimal price, UUID authorId) {
         UUID id = UUID.randomUUID();
         context.insertInto(book)
                 .set(book.ID, id)
@@ -33,15 +33,19 @@ public class BookService {
 
     }
 
-    public ApiBook getBookById(UUID id){
-        return context.select().from(book).where(book.ID.eq(id)).fetchAny().into(ApiBook.class);
+    public BookDto getBookById(UUID id) {
+        return context.select().from(book).where(book.ID.eq(id)).fetchAny().into(BookDto.class);
     }
 
-    public List<ApiBook> getBooks(){
-        return context.select().from(book).fetch().into(ApiBook.class);
+    public List<BookDto> getBooks() {
+        return context.select().from(book).fetch().into(BookDto.class);
     }
 
-    public ApiBook updateBook(UUID id, String name, BigDecimal price){
+    public List<BookDto> getBooksForAuthor(UUID authorId) {
+        return context.select().from(book).where(book.AUTHOR_ID.eq(authorId)).fetch().into(BookDto.class);
+    }
+
+    public BookDto updateBook(UUID id, String name, BigDecimal price) {
         context.update(book)
                 .set(book.NAME, name)
                 .set(book.PRICE, price)
@@ -50,7 +54,8 @@ public class BookService {
         return getBookById(id);
     }
 
-    public void deleteBookById(UUID id){
+    public void deleteBookById(UUID id) {
         context.delete(book).where(book.ID.eq(id)).execute();
     }
+
 }

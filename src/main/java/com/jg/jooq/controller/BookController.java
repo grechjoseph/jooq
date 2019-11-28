@@ -1,8 +1,8 @@
 package com.jg.jooq.controller;
 
-import com.jg.jooq.dto.ApiBook;
-import com.jg.jooq.dto.ApiCreateBook;
-import com.jg.jooq.dto.ApiUpdateBook;
+import com.jg.jooq.dto.BookDto;
+import com.jg.jooq.dto.CreateBookDto;
+import com.jg.jooq.dto.UpdateBookDto;
 import com.jg.jooq.service.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -17,27 +17,32 @@ public class BookController {
     private BookService bookService;
 
     @PostMapping("/authors/{authorId}/books")
-    public ApiBook createBook(@PathVariable UUID authorId, @RequestBody ApiCreateBook book){
+    public BookDto createBook(@PathVariable UUID authorId, @RequestBody CreateBookDto book) {
         return bookService.createBook(book.getName(), book.getPrice(), authorId);
     }
 
     @GetMapping("/books/{bookId}")
-    public ApiBook getBookById(@PathVariable UUID bookId){
+    public BookDto getBookById(@PathVariable UUID bookId) {
         return bookService.getBookById(bookId);
     }
 
     @GetMapping("/books")
-    public List<ApiBook> getBooks(){
+    public List<BookDto> getBooks() {
         return bookService.getBooks();
     }
 
+    @GetMapping("/authors/{authorId}/books")
+    public List<BookDto> getBooksForAuthor(@PathVariable UUID authorId) {
+        return bookService.getBooksForAuthor(authorId);
+    }
+
     @PutMapping("/books/{bookId}")
-    public ApiBook updateBook(@PathVariable UUID bookId, @RequestBody ApiUpdateBook book){
+    public BookDto updateBook(@PathVariable UUID bookId, @RequestBody UpdateBookDto book) {
         return bookService.updateBook(bookId, book.getName(), book.getPrice());
     }
 
     @DeleteMapping("/books/{bookId}")
-    public String deleteBookById(@PathVariable UUID bookId){
+    public String deleteBookById(@PathVariable UUID bookId) {
         bookService.deleteBookById(bookId);
         return "Book with ID '" + bookId + "' deleted successfully.";
     }
