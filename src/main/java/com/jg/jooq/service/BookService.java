@@ -1,6 +1,5 @@
 package com.jg.jooq.service;
 
-import com.jg.jooq.data.model.tables.Author;
 import com.jg.jooq.data.model.tables.Book;
 import com.jg.jooq.dto.BookDto;
 import org.jooq.DSLContext;
@@ -18,7 +17,6 @@ public class BookService {
     private DSLContext context;
 
     Book book = Book.BOOK;
-    Author author = Author.AUTHOR;
 
     public BookDto createBook(String name, BigDecimal price, UUID authorId) {
         UUID id = UUID.randomUUID();
@@ -49,6 +47,7 @@ public class BookService {
         context.update(book)
                 .set(book.NAME, name)
                 .set(book.PRICE, price)
+                .where(book.ID.eq(id))
                 .execute();
 
         return getBookById(id);

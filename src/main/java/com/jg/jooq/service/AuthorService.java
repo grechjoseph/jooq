@@ -1,5 +1,6 @@
 package com.jg.jooq.service;
 
+import com.jg.jooq.data.model.tables.Author;
 import com.jg.jooq.dto.AuthorDto;
 import org.jooq.DSLContext;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +15,7 @@ public class AuthorService {
     @Autowired
     private DSLContext context;
 
-    com.jg.jooq.data.model.tables.Author author = com.jg.jooq.data.model.tables.Author.AUTHOR;
+    Author author = Author.AUTHOR;
 
     public AuthorDto createAuthor(String firstName, String lastName) {
         UUID id = UUID.randomUUID();
