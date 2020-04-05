@@ -96,6 +96,10 @@
 					<locations>
 						<location>filesystem:src/main/resources/db/migration</location>
 					</locations>
+					<!-- Creates these schemas if they do not already exist. -->
+					<schemas>
+						<schema>jooq</schema>
+					</schemas>
 				</configuration>
 			</plugin>
 
